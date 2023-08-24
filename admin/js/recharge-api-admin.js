@@ -29,4 +29,34 @@
 	 * practising this, we should strive to set a better example in our own work.
 	 */
 
+	// console.log(RechargeApiParams)
+
+	jQuery(document).ready(function($) {
+		
+		$('#apiForm').submit(function(e) {
+			e.preventDefault();
+			
+			var url = $('#url').val();
+			var email = $('#email').val();
+			var password = $('#password').val();
+	
+			$.ajax({
+				type: 'POST',
+				url: RechargeApiParams.admin_ajax,
+				data: { 'action': 'recharge-api-add-new' ,'url': url, 'email': email, 'password':password },
+				beforeSend: function() {
+					$('#resultContainer').html('Loading......');
+				},
+				success: function(response) {
+					$('#resultContainer').html(response);
+				},
+				error: function() {
+					$('#resultContainer').html('Failed to connect.');
+				}
+			});
+		});
+	});
+	
+
+
 })( jQuery );

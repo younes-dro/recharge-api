@@ -156,6 +156,8 @@ class Recharge_Api {
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		add_action( 'admin_menu', array( $plugin_admin, 'recharge_api_add_settings_menu' ) );
+		$this->loader->add_action( 'wp_ajax_recharge-api-add-new', $plugin_admin, 'add_new_api' );
 
 	}
 
