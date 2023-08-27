@@ -8,7 +8,10 @@
 				</li>
 				<li class="skltbs-tab-item">
 				<button class="skltbs-tab" data-identity="new_api" ><?php esc_html_e( 'Available APIs', 'recharge-api' ); ?></button>
-				</li>>
+				</li>
+				<li class="skltbs-tab-item">
+				<button class="skltbs-tab" data-identity="settings" ><?php esc_html_e( 'Settings', 'recharge-api' ); ?></button>
+				</li>				
 				<li class="skltbs-tab-item">
 				<button class="skltbs-tab" data-identity="logs" ><?php esc_html_e( 'Logs', 'recharge-api' ); ?>	
 				</button>
@@ -20,14 +23,16 @@
 			</ul>
 			<div class="skltbs-panel-group">
 				<div id="add_api" class="recharge-api-tab-conetent skltbs-panel">
-                <?php require_once RECHARGE_API_PLUGIN_DIR_PATH . 'admin/partials/pages/add-api.php'; ?>
+				<?php require_once RECHARGE_API_PLUGIN_DIR_PATH . 'admin/partials/pages/add-api.php'; ?>
 				</div>     
 				<div id="availables_api" class="recharge-api-tab-conetent skltbs-panel wrap">
-                <?php require_once RECHARGE_API_PLUGIN_DIR_PATH . 'admin/partials/pages/availables-apis.php'; ?>
+				<?php require_once RECHARGE_API_PLUGIN_DIR_PATH . 'admin/partials/pages/availables-apis.php'; ?>
 				</div>
-
+				<div id="settings" class="recharge-api-tab-conetent skltbs-panel wrap">
+				<?php require_once RECHARGE_API_PLUGIN_DIR_PATH . 'admin/partials/pages/settings.php'; ?>
+				</div>
 				<div id='logs' class="recharge-api-tab-conetent skltbs-panel">
-                <?php require_once RECHARGE_API_PLUGIN_DIR_PATH . 'admin/partials/pages/logs.php'; ?>
+				<?php require_once RECHARGE_API_PLUGIN_DIR_PATH . 'admin/partials/pages/logs.php'; ?>
 				</div>
 				<div id='recharge_manuelle' class="recharge-api-tab-conetent skltbs-panel">
 				<?php require_once RECHARGE_API_PLUGIN_DIR_PATH . 'admin/partials/pages/recharge-manuelle.php'; ?>

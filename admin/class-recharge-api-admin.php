@@ -44,13 +44,13 @@ class Recharge_Api_Admin {
 	 * Initialize the class and set its properties.
 	 *
 	 * @since    1.0.0
-	 * @param      string    $plugin_name       The name of this plugin.
-	 * @param      string    $version    The version of this plugin.
+	 * @param      string $plugin_name       The name of this plugin.
+	 * @param      string $version    The version of this plugin.
 	 */
 	public function __construct( $plugin_name, $version ) {
 
 		$this->plugin_name = $plugin_name;
-		$this->version = $version;
+		$this->version     = $version;
 
 	}
 
@@ -102,8 +102,8 @@ class Recharge_Api_Admin {
 		wp_register_script( $this->plugin_name . '-tabs-js', RECHARGE_API_PLUGIN_URL . 'admin/js/skeletabs.js', array( 'jquery' ), $this->version, false );
 
 		$script_params = array(
-			'admin_ajax'                      => admin_url( 'admin-ajax.php' ),
-			'is_admin'                        => is_admin(),
+			'admin_ajax'         => admin_url( 'admin-ajax.php' ),
+			'is_admin'           => is_admin(),
 			'rechrage_api_nonce' => wp_create_nonce( 'recharge-api-ajax-nonce' ),
 		);
 		wp_localize_script( $this->plugin_name, 'RechargeApiParams', $script_params );
@@ -140,17 +140,17 @@ class Recharge_Api_Admin {
 
 	/**
 	 *  Add new User API
-	 *
 	 */
 	public function add_new_api() {
 		global $wpdb;
 		if ( ! is_admin() ) {
+			return 'not admin';
 			exit();
 		}
-		$url = $_POST['url'];
-		$email = $_POST['email'];
+		$url      = $_POST['url'];
+		$email    = $_POST['email'];
 		$password = $_POST['password'];
-		$args = array(
+		$args     = array(
 			'headers' => array(
 				'method'        => 'GET',
 				'Authorization' => 'Basic',
@@ -165,38 +165,113 @@ class Recharge_Api_Admin {
 		$response_arr = wp_remote_get( $url . '/api/login', $args );
 		if ( is_array( $response_arr ) ) {
 			if ( $response_arr['response']['code'] === 200 ) {
-				$body = json_decode( wp_remote_retrieve_body( $response_arr ) );
-				// return array(
-				// 	'status' => 'ok',
-				// 	'token'  => $body->user_api_hash,
-				// );
-				$token = $body->user_api_hash;
-				$table_api = $wpdb->prefix . 'recharge_user_api';
-				$where_clause = "  WHERE `email` = '" . $email . "'";
+				$body         = json_decode( wp_remote_retrieve_body( $response_arr ) );
+				$token        = $body->user_api_hash;
+				$table_api    = $wpdb->prefix . 'recharge_user_api';
+				$where_clause = "  WHERE `app` = '" . $url . "' and `email` = '" . $email . "'";
 				$sql_query    = "SELECT email FROM {$table_api} " . $where_clause . ' ;';
-				$result = $wpdb->get_results( $sql_query, ARRAY_A );
+				$result       = $wpdb->get_results( $sql_query, ARRAY_A );
+
 				if ( is_array( $result ) && count( $result ) ) {
-			
-					return false;
+					echo '<h1>The user already exits for this API endpoint URL</h1>';
+
 				} else {
 					$data = array(
-						'email'    => $email,
+						'email'           => $email,
 						'hashed_password' => $password,
-						'app'      => $url,
-						'token'    => $token,
+						'app'             => $url,
+						'token'           => $token,
 					);
-			
-					$wpdb->insert( $table_api, $data );
-					return 'ok';
-				
-				}
 
+					$wpdb->insert( $table_api, $data );
+					echo '<h2>The API endpoint URL has been registered</h2>';
+					exit();
+
+				}
 			} else {
-				return $response_arr['response'];
+
+				if ( array_key_exists( 'code', $response_arr['response'] ) ) {
+					if ( $response_arr['response']['code'] == 401 ) {
+						echo '<h2 class="unauthorized">Unauthorized</h2>';
+					} else {
+						var_dump( $response_arr['response']['code'] );
+					}
+				}
 			}
+		} else {
+
+			echo '<h2>The API endpoint URL is wrong</h2>';
 		}
 
 		exit();
 	}
+
+	/**
+	 * Delete USER API
+	 */
+	public function delete_user_api_row() {
+
+		if ( isset( $_POST['row_id'] ) ) {
+			global $wpdb;
+			$table_name = $wpdb->prefix . 'recharge_user_api';
+
+			$row_id = intval( $_POST['row_id'] );
+
+			$wpdb->delete( $table_name, array( 'id' => $row_id ) );
+		}
+		exit();
+	}
+
+	/**
+	 * 
+	 */
+
+	 public function save_sms_gateway_settings(){
+
+		if ( ! current_user_can( 'administrator' ) ) {
+			wp_send_json_error( 'You do not have sufficient rights', 403 );
+			exit();
+		}
+		$api_url = isset($_POST['set-the-sms-gateway-api-url']) ? sanitize_text_field(trim($_POST['set-the-sms-gateway-api-url'])) : '';
+		$api_key = isset($_POST['set-the-sms-gateway-api-key']) ? sanitize_text_field(trim($_POST['set-the-sms-gateway-api-key'])) : '';
+		$device_name = isset($_POST['set-the-sms-gateway-device-name']) ? sanitize_text_field(trim($_POST['set-the-sms-gateway-device-name'])) : '';
+		$ussd_recharge = isset($_POST['set-the-ussd-code-for-recharge']) ? sanitize_text_field(trim($_POST['set-the-ussd-code-for-recharge'])) : '';
+		$ussd_balance = isset($_POST['set-the-ussd-code-for-balance-check']) ? sanitize_text_field(trim($_POST['set-the-ussd-code-for-balance-check'])) : '';
+		$email_recipients = isset($_POST['set-the-users-for-email-notifications']) ? sanitize_text_field(trim($_POST['set-the-users-for-email-notifications'])) : '';
+		$ets_current_url = sanitize_text_field( trim( $_POST['current_url'] ) );
+
+		if ( $_POST['action'] == 'save_sms_gateway_settings' ){
+
+			if ($api_url) {
+				update_option('set-the-sms-gateway-api-url', $api_url);
+			}
+			
+			if ($api_key) {
+				update_option('set-the-sms-gateway-api-key', $api_key);
+			}
+			
+			if ($device_name) {
+				update_option('set-the-sms-gateway-device-name', $device_name);
+			}
+			
+			if ($ussd_recharge) {
+				update_option('set-the-ussd-code-for-recharge', $ussd_recharge);
+			}
+			
+			if ($ussd_balance) {
+				update_option('set-the-ussd-code-for-balance-check', $ussd_balance);
+			}
+			
+			if ($email_recipients) {
+				update_option('set-the-users-for-email-notifications', $email_recipients);
+			}
+			
+			
+			$pre_location = $ets_current_url . '&save_settings_msg=' . $message . '#settings';
+			wp_safe_redirect( $pre_location );
+
+		}
+
+	 }
 
 }

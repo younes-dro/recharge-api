@@ -439,3 +439,40 @@ table#api-error {
     background-color: #77A02E !important;
     color: #ffffff;
   }
+
+
+  /************** Availble APIS ***********************/
+  
+/* Apply WordPress admin table styling */
+.wp-list-table {
+    width: 100%;
+    margin: 1em 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid #e1e1e1;
+    background-color: #fff;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
+
+.wp-list-table th,
+.wp-list-table td {
+    padding: 8px;
+    text-align: left;
+    border-top: 1px solid #e1e1e1;
+    border-bottom: 1px solid #e1e1e1;
+}
+
+.wp-list-table th {
+    font-weight: bold;
+    background-color: #f9f9f9;
+}
+
+.wp-list-table tbody > tr:nth-child(odd) { /* Fix for odd rows */
+    background-color: #f9f9f9;
+}
+
+.wp-list-table tbody tr:hover {
+    background-color: #fefefe;
+}
+
+

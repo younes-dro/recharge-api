@@ -48,6 +48,7 @@
 					$('#resultContainer').html('Loading......');
 				},
 				success: function(response) {
+					// console.log (response);
 					$('#resultContainer').html(response);
 				},
 				error: function() {
@@ -56,7 +57,36 @@
 			});
 		});
 	});
-	
 
+	jQuery(document).ready(function($) {
+		$('.delete-row').on('click', function(e) {
+			e.preventDefault();
+	
+			var rowId = $(this).data('id');
+			var $row = $(this).closest('tr'); // Get the parent row
+			var confirmDelete = confirm('Are you sure you want to delete this row?');
+	
+			if (confirmDelete) {
+				$.ajax({
+					url: RechargeApiParams.admin_ajax,
+					type: 'POST',
+					data: {
+						action: 'delete_user_api_row',
+						row_id: rowId,
+					},
+					success: function(response) {
+						// Reload or update the table
+						$row.remove();
+						
+					},
+				});
+			}
+		});
+	});
+	
+	
+	$.skeletabs.setDefaults({
+		keyboard: false,
+	}); 
 
 })( jQuery );
