@@ -280,8 +280,8 @@ class Recharge_Api_Admin {
 
 		if ( ! empty( $phone_number ) ) {
 			try {
-				$msg = sendSingleMessage( $phone_number, 'This is a test of single message.' );
-				print_r( $msg );
+				$msg = sendSingleMessage( $phone_number, 'This is a test of single message. 2' );
+				// print_r( $msg );
 
 				echo 'Successfully sent a message.';
 
