@@ -278,18 +278,35 @@ class Recharge_Api_Admin {
 
 		$phone_number = sanitize_text_field( $_POST['phone_number'] );
 
-		if ( ! empty( $phone_number ) ) {
-			try {
-				$msg = sendSingleMessage( $phone_number, 'This is a test of single message. 2' );
-				// print_r( $msg );
+		$deviceID = 3;
+		$ussdCode = '*3';
+		$simSlot  = 0;
+		$request  = $phone_number . $ussdCode;
 
-				echo 'Successfully sent a message.';
+		try {
+			$ussdRequest = sendUssdRequest( $request, $deviceID, $simSlot );
+			echo '<pre>';
+			print_r( $ussdRequest );
+			echo '<pre>';
 
-			} catch ( Exception $e ) {
-
-				echo $e->getMessage();
-			}
+		} catch ( Exception $e ) {
+			echo $e->getMessage();
 		}
+
+		// if ( ! empty( $phone_number ) ) {
+		// try {
+		// $msg = sendSingleMessage( $phone_number, ' test sms' );
+		// echo '<pre>';
+		// print_r( $msg );
+		// echo '</pre>';
+
+		// echo 'Successfully sent a message.';
+
+		// } catch ( Exception $e ) {
+
+		// echo $e->getMessage();
+		// }
+		// }
 
 		exit();
 	}
