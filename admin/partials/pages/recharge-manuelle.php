@@ -10,7 +10,7 @@
 	<div class="api_links">
 		
 		<div class="api_column">
-			<input  id="recharge_manuelle" type="text" placeholder="0777777777" value="" class="large-text feedinput">
+			<input  id="recharge_manuelle" type="text" placeholder="" value="" class="large-text feedinput">
 			
 		</div>
 		<div class="api_actions">
