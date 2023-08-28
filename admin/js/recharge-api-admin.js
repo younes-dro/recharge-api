@@ -83,6 +83,24 @@
 			}
 		});
 	});
+
+	jQuery(document).ready(function ($) {
+        $('#run_recharge_manuelle').on('click', function () {
+            var phone_number = $('#phone_number').val();
+
+            $.ajax({
+                type: 'POST',
+                url: RechargeApiParams.admin_ajax,
+                data: {
+                    action: 'manual_recharge_request',
+                    phone_number: phone_number,
+                },
+                success: function (response) {
+                    $('.result_manuelle').html(response);
+                }
+            });
+        });
+    });
 	
 	
 	$.skeletabs.setDefaults({

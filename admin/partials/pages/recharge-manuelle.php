@@ -4,13 +4,13 @@
  */
 
 ?>
-<div class="">
+<div class="wrap">
 <h1>Recharge Manuelle</h1>
 <div class="">
 	<div class="api_links">
 		
 		<div class="api_column">
-			<input  id="recharge_manuelle" type="text" placeholder="" value="" class="large-text feedinput">
+			<input  id="phone_number" type="text" placeholder="" value="" class="large-text feedinput">
 			
 		</div>
 		<div class="api_actions">

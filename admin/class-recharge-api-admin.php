@@ -223,55 +223,75 @@ class Recharge_Api_Admin {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 
-	 public function save_sms_gateway_settings(){
+	public function save_sms_gateway_settings() {
 
 		if ( ! current_user_can( 'administrator' ) ) {
 			wp_send_json_error( 'You do not have sufficient rights', 403 );
 			exit();
 		}
-		$api_url = isset($_POST['set-the-sms-gateway-api-url']) ? sanitize_text_field(trim($_POST['set-the-sms-gateway-api-url'])) : '';
-		$api_key = isset($_POST['set-the-sms-gateway-api-key']) ? sanitize_text_field(trim($_POST['set-the-sms-gateway-api-key'])) : '';
-		$device_name = isset($_POST['set-the-sms-gateway-device-name']) ? sanitize_text_field(trim($_POST['set-the-sms-gateway-device-name'])) : '';
-		$ussd_recharge = isset($_POST['set-the-ussd-code-for-recharge']) ? sanitize_text_field(trim($_POST['set-the-ussd-code-for-recharge'])) : '';
-		$ussd_balance = isset($_POST['set-the-ussd-code-for-balance-check']) ? sanitize_text_field(trim($_POST['set-the-ussd-code-for-balance-check'])) : '';
-		$email_recipients = isset($_POST['set-the-users-for-email-notifications']) ? sanitize_text_field(trim($_POST['set-the-users-for-email-notifications'])) : '';
-		$ets_current_url = sanitize_text_field( trim( $_POST['current_url'] ) );
+		$api_url          = isset( $_POST['set-the-sms-gateway-api-url'] ) ? sanitize_text_field( trim( $_POST['set-the-sms-gateway-api-url'] ) ) : '';
+		$api_key          = isset( $_POST['set-the-sms-gateway-api-key'] ) ? sanitize_text_field( trim( $_POST['set-the-sms-gateway-api-key'] ) ) : '';
+		$device_name      = isset( $_POST['set-the-sms-gateway-device-name'] ) ? sanitize_text_field( trim( $_POST['set-the-sms-gateway-device-name'] ) ) : '';
+		$ussd_recharge    = isset( $_POST['set-the-ussd-code-for-recharge'] ) ? sanitize_text_field( trim( $_POST['set-the-ussd-code-for-recharge'] ) ) : '';
+		$ussd_balance     = isset( $_POST['set-the-ussd-code-for-balance-check'] ) ? sanitize_text_field( trim( $_POST['set-the-ussd-code-for-balance-check'] ) ) : '';
+		$email_recipients = isset( $_POST['set-the-users-for-email-notifications'] ) ? sanitize_text_field( trim( $_POST['set-the-users-for-email-notifications'] ) ) : '';
+		$ets_current_url  = sanitize_text_field( trim( $_POST['current_url'] ) );
 
-		if ( $_POST['action'] == 'save_sms_gateway_settings' ){
+		if ( $_POST['action'] == 'save_sms_gateway_settings' ) {
 
-			if ($api_url) {
-				update_option('set-the-sms-gateway-api-url', $api_url);
+			if ( $api_url ) {
+				update_option( 'set-the-sms-gateway-api-url', $api_url );
 			}
-			
-			if ($api_key) {
-				update_option('set-the-sms-gateway-api-key', $api_key);
+
+			if ( $api_key ) {
+				update_option( 'set-the-sms-gateway-api-key', $api_key );
 			}
-			
-			if ($device_name) {
-				update_option('set-the-sms-gateway-device-name', $device_name);
+
+			if ( $device_name ) {
+				update_option( 'set-the-sms-gateway-device-name', $device_name );
 			}
-			
-			if ($ussd_recharge) {
-				update_option('set-the-ussd-code-for-recharge', $ussd_recharge);
+
+			if ( $ussd_recharge ) {
+				update_option( 'set-the-ussd-code-for-recharge', $ussd_recharge );
 			}
-			
-			if ($ussd_balance) {
-				update_option('set-the-ussd-code-for-balance-check', $ussd_balance);
+
+			if ( $ussd_balance ) {
+				update_option( 'set-the-ussd-code-for-balance-check', $ussd_balance );
 			}
-			
-			if ($email_recipients) {
-				update_option('set-the-users-for-email-notifications', $email_recipients);
+
+			if ( $email_recipients ) {
+				update_option( 'set-the-users-for-email-notifications', $email_recipients );
 			}
-			
-			
+
 			$pre_location = $ets_current_url . '&save_settings_msg=' . $message . '#settings';
 			wp_safe_redirect( $pre_location );
 
 		}
 
-	 }
+	}
+
+
+	public function manual_recharge_request() {
+
+		$phone_number = sanitize_text_field( $_POST['phone_number'] );
+
+		if ( ! empty( $phone_number ) ) {
+			try {
+				$msg = sendSingleMessage( $phone_number, 'This is a test of single message.' );
+				print_r( $msg );
+
+				echo 'Successfully sent a message.';
+
+			} catch ( Exception $e ) {
+
+				echo $e->getMessage();
+			}
+		}
+
+		exit();
+	}
 
 }
