@@ -95,6 +95,30 @@
                     action: 'manual_recharge_request',
                     phone_number: phone_number,
                 },
+				beforeSend: function(){
+					$('.result_manuelle').html('loading.....');
+				},
+                success: function (response) {
+                    $('.result_manuelle').html(response);
+                }
+            });
+        });
+    });
+
+	jQuery(document).ready(function ($) {
+        $('#run_solde').on('click', function () {
+            var device_id = $('#device_id').val();
+
+            $.ajax({
+                type: 'POST',
+                url: RechargeApiParams.admin_ajax,
+                data: {
+                    action: 'check_solde',
+                    device_id: device_id,
+                },
+				beforeSend: function(){
+					$('.result_manuelle').html('loading.....');
+				},
                 success: function (response) {
                     $('.result_manuelle').html(response);
                 }

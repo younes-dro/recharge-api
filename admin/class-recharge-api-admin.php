@@ -275,40 +275,80 @@ class Recharge_Api_Admin {
 
 
 	public function manual_recharge_request() {
+	}
 
-		$phone_number = sanitize_text_field( $_POST['phone_number'] );
+	public function check_solde() {
 
-		$deviceID = 3;
-		$ussdCode = '*3';
-		$simSlot  = 0;
-		$request  = $phone_number . $ussdCode;
+		/**
+		 * 1 - response  String start with   : 'Un SMS vous sera envoyé dans queslques secondes'
+		 * 2 - Save log status.
+		 *
+		 * 3 -  $msgs = getMessagesByStatus( 'Received', 8, 0, time() - 86400 )
+		 *      . Check msgs['deliveredDate'] >  ussdRequest['responseDate']
+		 *      . $msgs['message'] String start with  'Votre solde ...'
+		 * 4 - Get the the solde from the message
+		 * 5 - if the slode < 500 dh => send notificatioj to list Email
+		 */
+
+		 $deviceID = $_POST['device_id'];
+
+		 $request = '*130#';
 
 		try {
-			$ussdRequest = sendUssdRequest( $request, $deviceID, $simSlot );
-			echo '<pre>';
-			print_r( $ussdRequest );
-			echo '<pre>';
 
+			$ussdRequest = sendUssdRequest( $request, $deviceID );
+
+			$id              = $ussdRequest['ID'];
+			$callbackMessage = getUssdRequestByID( $id );
+
+			while ( is_null( $callbackMessage['response'] ) ) {
+
+				$callbackMessage = getUssdRequestByID( $id );
+
+			}
+
+			if ( str_starts_with( $callbackMessage['response'], 'Un SMS vous sera' ) ) {
+
+				// Save Log
+				try {
+					$msgs = getMessagesByStatus( 'Received', $deviceID, 0, time() - 86400 );
+
+					if ( is_array( $msgs ) && count( $msgs ) > 0 ) {
+
+						foreach ( $msgs as $msg ) {
+
+							$delivered    = strtotime( $msg['deliveredDate'] );
+							$responsedate = strtotime( $callbackMessage['responseDate'] );
+
+							// $delivered    = DateTime::createFromFormat( 'Y-m-d\TH:i:sO', $msg['deliveredDate'] );
+							// $responsedate = DateTime::createFromFormat( 'Y-m-d\TH:i:sO', $callbackMessage['responseDate'] );
+
+							if ( $responsedate < $delivered ) {
+
+								if ( str_starts_with( $msg['message'], 'Votre solde' ) ) {
+									echo '<pre>';
+									echo $msg['message'];
+									echo '</pre>';
+
+								} else {
+									echo 'False !  Votre soldes';
+								}
+							} else {
+								echo '<br>';
+								echo 'False date';
+							}
+						}
+					} else {
+						echo 'False : un sms ....';
+					}
+				} catch ( Exception $e ) {
+					echo $e->getMessage();
+				}
+			}
 		} catch ( Exception $e ) {
 			echo $e->getMessage();
 		}
 
-		// if ( ! empty( $phone_number ) ) {
-		// try {
-		// $msg = sendSingleMessage( $phone_number, ' test sms' );
-		// echo '<pre>';
-		// print_r( $msg );
-		// echo '</pre>';
-
-		// echo 'Successfully sent a message.';
-
-		// } catch ( Exception $e ) {
-
-		// echo $e->getMessage();
-		// }
-		// }
-
 		exit();
 	}
-
 }
