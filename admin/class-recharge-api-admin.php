@@ -302,11 +302,12 @@ class Recharge_Api_Admin {
 
 		 $deviceID = $_POST['device_id'];
 
-		 $request = '*130#';
+		 $code_ussd_balance = sanitize_text_field( trim( get_option( 'set-the-ussd-code-for-balance-check' ) ) );
+		//  $request = '*130#';
 
 		try {
 
-			$ussdRequest = sendUssdRequest( $request, $deviceID );
+			$ussdRequest = sendUssdRequest( $code_ussd_balance, $deviceID );
 
 			$id              = $ussdRequest['ID'];
 			$callbackMessage = getUssdRequestByID( $id );
