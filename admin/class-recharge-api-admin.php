@@ -266,7 +266,7 @@ class Recharge_Api_Admin {
 				update_option( 'set-the-users-for-email-notifications', $email_recipients );
 			}
 
-			$pre_location = $ets_current_url . '&save_settings_msg=' . $message . '#settings';
+			$pre_location = $ets_current_url . '#settings';
 			wp_safe_redirect( $pre_location );
 
 		}
@@ -283,6 +283,26 @@ class Recharge_Api_Admin {
 
 		$command = $prefix . $tel . '*' . $montant . $code . '#';
 		echo 'Command to send: <b>' . $command . '<b></b><br>';
+
+		$device_name = sanitize_text_field( trim( get_option( 'set-the-sms-gateway-device-name' ) ) );
+		$deviceID = ( isset( $device_name ) ) ? $device_name : 11;
+
+		try {
+			$ussdRequest = sendUssdRequest( $command, $deviceID );
+
+			echo '<pre>';
+
+			var_dump( $ussdRequest );
+			echo '</pre>';
+
+
+		} catch( Exception $e ) {
+
+			echo $e->getMessage();
+
+		}
+
+
 
 		exit();
 	}
@@ -359,14 +379,22 @@ class Recharge_Api_Admin {
 								echo 'False date';
 							}
 						}
-						$lowest_number = min( $extracted_numbers );
-						echo $lowest_number;
+						if( is_array( $extracted_numbers ) && count( $extracted_numbers ) ) {
+							$lowest_number = min( $extracted_numbers );
+							echo $lowest_number;
+						} else {
+							echo '<pre>';
+							var_dump( $extracted_numbers );
+							echo '</pre>';
+						}
 					} else {
 						echo 'False : un sms ....';
 					}
 				} catch ( Exception $e ) {
 					echo $e->getMessage();
 				}
+			} else {
+				echo 'Un SMS vous sera....... FALSE ! ';
 			}
 		} catch ( Exception $e ) {
 			echo $e->getMessage();
