@@ -275,6 +275,16 @@ class Recharge_Api_Admin {
 
 
 	public function manual_recharge_request() {
+
+		$prefix  = '*139*';
+		$tel     = $_POST['formData']['tel'];
+		$montant = $_POST['formData']['montant'];
+		$code    = ( isset( $_POST['formData']['code'] ) && ! empty( trim( $_POST['formData']['code'] ) ) ) ? '*' . trim( $_POST['formData']['code'] ) : '';
+
+		$command = $prefix . $tel . '*' . $montant . $code . '#';
+		echo 'Command to send: <b>' . $command . '<b></b><br>';
+
+		exit();
 	}
 
 	public function check_solde() {
@@ -317,27 +327,39 @@ class Recharge_Api_Admin {
 
 						foreach ( $msgs as $msg ) {
 
+
+							// $delivered    = new DateTime( $msg['deliveredDate'] );
+							// $responsedate = new DateTime( $callbackMessage['responseDate'] );
+
 							$delivered    = strtotime( $msg['deliveredDate'] );
 							$responsedate = strtotime( $callbackMessage['responseDate'] );
 
-							// $delivered    = DateTime::createFromFormat( 'Y-m-d\TH:i:sO', $msg['deliveredDate'] );
-							// $responsedate = DateTime::createFromFormat( 'Y-m-d\TH:i:sO', $callbackMessage['responseDate'] );
-
-							if ( $responsedate < $delivered ) {
-
+							if ( $delivered < $responsedate  ) {
+								$extracted_numbers = [];
 								if ( str_starts_with( $msg['message'], 'Votre solde' ) ) {
-									echo '<pre>';
-									echo $msg['message'];
-									echo '</pre>';
+									$pattern = '/\d+(\.\d+)?/';
+									preg_match( $pattern, $msg['message'], $matches );
+									if ( !empty( $matches ) ) {
+										$extracted_numbers[] = $matches[0];
+										//echo $number . '<br>';
+									}
+									// echo '<pre>';
+									// echo $msg['message'];
+									// echo '</pre>';
 
 								} else {
-									echo 'False !  Votre soldes';
+
+									// echo '<pre>';
+									// echo $msg['message'];
+									// echo '</pre>';
 								}
 							} else {
 								echo '<br>';
 								echo 'False date';
 							}
 						}
+						$lowest_number = min( $extracted_numbers );
+						echo $lowest_number;
 					} else {
 						echo 'False : un sms ....';
 					}

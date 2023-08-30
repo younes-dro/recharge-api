@@ -17,6 +17,10 @@
 				</button>
 				</li>  
 				<li class="skltbs-tab-item">
+				<button class="skltbs-tab" data-identity="commands" ><?php esc_html_e( 'Commands', 'recharge-api' ); ?>	
+				</button>
+				</li>
+				<li class="skltbs-tab-item">
 				<button class="skltbs-tab" data-identity="manuelle" ><?php esc_html_e( 'Recharge manuelle', 'recharge-api' ); ?>	
 				</button>
 				</li>
@@ -34,6 +38,9 @@
 				<div id='logs' class="recharge-api-tab-conetent skltbs-panel">
 				<?php require_once RECHARGE_API_PLUGIN_DIR_PATH . 'admin/partials/pages/logs.php'; ?>
 				</div>
+				<div id='commands' class="recharge-api-tab-conetent skltbs-panel">
+				<?php require_once RECHARGE_API_PLUGIN_DIR_PATH . 'admin/partials/pages/commands.php'; ?>
+				</div>				
 				<div id='recharge_manuelle' class="recharge-api-tab-conetent skltbs-panel">
 				<?php require_once RECHARGE_API_PLUGIN_DIR_PATH . 'admin/partials/pages/recharge-manuelle.php'; ?>
 				</div>				

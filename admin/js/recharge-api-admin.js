@@ -85,25 +85,51 @@
 	});
 
 	jQuery(document).ready(function ($) {
-        $('#run_recharge_manuelle').on('click', function () {
-            var phone_number = $('#phone_number').val();
-
-            $.ajax({
-                type: 'POST',
-                url: RechargeApiParams.admin_ajax,
-                data: {
-                    action: 'manual_recharge_request',
-                    phone_number: phone_number,
-                },
-				beforeSend: function(){
+		$('#run_recharge_manuelle').on('click', function (e) {
+			e.preventDefault();
+	
+			var telInput = $('#tel');
+			var montantInput = $('#montant');
+	
+			if (telInput.val() === '') {
+				telInput.css('border', '2px solid red');
+			} else {
+				telInput.css('border', 'none'); 
+			}
+	
+			if (montantInput.val() === '') {
+				montantInput.css('border', '2px solid red');
+			} else {
+				montantInput.css('border', 'none'); 
+			}
+	
+			if (telInput.val() === '' || montantInput.val() === '') {
+				return;
+			}
+	
+			var formData = {
+				tel: telInput.val(),
+				montant: montantInput.val(),
+				code: $('#code').val()
+			};
+	
+			$.ajax({
+				type: 'POST',
+				url: RechargeApiParams.admin_ajax,
+				data: {
+					action: 'manual_recharge_request',
+					formData: formData,
+				},
+				beforeSend: function () {
 					$('.result_manuelle').html('loading.....');
 				},
-                success: function (response) {
-                    $('.result_manuelle').html(response);
-                }
-            });
-        });
-    });
+				success: function (response) {
+					$('.result_manuelle').html(response);
+				}
+			});
+		});
+	});
+	
 
 	jQuery(document).ready(function ($) {
         $('#run_solde').on('click', function () {
@@ -117,10 +143,10 @@
                     device_id: device_id,
                 },
 				beforeSend: function(){
-					$('.result_manuelle').html('loading.....');
+					$('.commands_result').html('loading.....');
 				},
                 success: function (response) {
-                    $('.result_manuelle').html(response);
+                    $('.commands_result').html(response);
                 }
             });
         });
