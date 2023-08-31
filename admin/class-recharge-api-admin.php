@@ -285,7 +285,7 @@ class Recharge_Api_Admin {
 		echo 'Command to send: <b>' . $command . '<b></b><br>';
 
 		$device_name = sanitize_text_field( trim( get_option( 'set-the-sms-gateway-device-name' ) ) );
-		$deviceID = ( isset( $device_name ) ) ? $device_name : 11;
+		$deviceID    = ( isset( $device_name ) ) ? $device_name : 11;
 
 		try {
 			$ussdRequest = sendUssdRequest( $command, $deviceID );
@@ -295,14 +295,11 @@ class Recharge_Api_Admin {
 			var_dump( $ussdRequest );
 			echo '</pre>';
 
-
-		} catch( Exception $e ) {
+		} catch ( Exception $e ) {
 
 			echo $e->getMessage();
 
 		}
-
-
 
 		exit();
 	}
@@ -323,7 +320,7 @@ class Recharge_Api_Admin {
 		 $deviceID = $_POST['device_id'];
 
 		 $code_ussd_balance = sanitize_text_field( trim( get_option( 'set-the-ussd-code-for-balance-check' ) ) );
-		//  $request = '*130#';
+		// $request = '*130#';
 
 		try {
 
@@ -348,21 +345,20 @@ class Recharge_Api_Admin {
 
 						foreach ( $msgs as $msg ) {
 
-
 							// $delivered    = new DateTime( $msg['deliveredDate'] );
 							// $responsedate = new DateTime( $callbackMessage['responseDate'] );
 
 							$delivered    = strtotime( $msg['deliveredDate'] );
 							$responsedate = strtotime( $callbackMessage['responseDate'] );
 
-							if ( $delivered < $responsedate  ) {
-								$extracted_numbers = [];
+							if ( $delivered < $responsedate ) {
+								$extracted_numbers = array();
 								if ( str_starts_with( $msg['message'], 'Votre solde' ) ) {
 									$pattern = '/\d+(\.\d+)?/';
 									preg_match( $pattern, $msg['message'], $matches );
-									if ( !empty( $matches ) ) {
+									if ( ! empty( $matches ) ) {
 										$extracted_numbers[] = $matches[0];
-										//echo $number . '<br>';
+										// echo $number . '<br>';
 									}
 									// echo '<pre>';
 									// echo $msg['message'];
@@ -379,7 +375,7 @@ class Recharge_Api_Admin {
 								echo 'False date';
 							}
 						}
-						if( is_array( $extracted_numbers ) && count( $extracted_numbers ) ) {
+						if ( is_array( $extracted_numbers ) && count( $extracted_numbers ) ) {
 							$lowest_number = min( $extracted_numbers );
 							echo $lowest_number;
 						} else {
@@ -398,6 +394,95 @@ class Recharge_Api_Admin {
 			}
 		} catch ( Exception $e ) {
 			echo $e->getMessage();
+		}
+
+		exit();
+	}
+
+	/**
+	 * To remove : juste for test prupose
+	 *
+	 * @return void
+	 */
+	public function test_devices() {
+
+		$token = $_POST['token'];
+		$url   = $_POST['url'];
+
+		$api_url      = $url . '/api/get_devices';
+		$query_params = array(
+			'lang'          => 'en',
+			'user_api_hash' => $token,
+		);
+
+		$request_url = add_query_arg( $query_params, $api_url );
+		$response    = wp_remote_get( $request_url );
+
+		$response_code = wp_remote_retrieve_response_code( $response );
+		if ( $response_code == 401 ) {
+			echo '<h2>Unauthorized</h2>';
+			exit();
+		}
+
+		if ( is_array( $response ) && ! is_wp_error( $response ) ) {
+
+			$response_body  = wp_remote_retrieve_body( $response );
+			$response_array = json_decode( $response_body, true );
+
+			if ( is_array( $response_array ) && $response_array !== null ) {
+				/**
+				 * To check if there is more group
+				 * for this exmple we only retrieve the fisrt 0 index
+				 */
+				$items = $response_array[0]['items'];
+
+				foreach ( $items as $item ) {
+					$device_data = $item['device_data'];
+					if ( $device_data['active'] ) {
+						// Save Entry log : Active status Column, value YES
+						if ( ! $device_data['deleted'] ) {
+							// Save Entry log : Expired Column, value No
+
+							$current_timestamp = time();
+							$next_30_days      = strtotime( '+30 days', $current_timestamp );
+							$entry_timestamp   = $item['timestamp'];
+							if ( $entry_timestamp <= $next_30_days ) {
+								// Save entry log : Log NUMBER_OF_DAYS since the last connection under LAST_CONNECTED column
+
+								$current_timestamp = time();
+								$eighty_days_ago   = strtotime( '-80 days', $current_timestamp );
+								$vin               = $device_data['vin'];
+								$date_string       = substr( $vin, 0, 10 );
+								$date_timestamp    = strtotime( $date_string );
+								if ( $date_timestamp <= $eighty_days_ago ) {
+									// Save entry log: Log NUMBER_OF_DAYS since the last recharge under LAST_RECHARGED column
+
+									// Execute SSD
+									echo 'Exceute USSD for device : ' . $item['name'];
+									echo '<br>';
+
+								} else {
+									// Save entry log : Log NUMBER_OF_DAYS since the last recharge under LAST_RECHARGED column
+									continue;
+								}
+							} else {
+								// Save entry log : Log NUMBER_OF_DAYS since the last connection under LAST_CONNECTED column
+								continue;
+							}
+						} else {
+							// Save Entry log : Expired Column, value YES
+							continue;
+						}
+					} else {
+
+						// Save Entry log : Active status Column
+						echo 'not Active';
+						continue;
+					}
+				}
+			} else {
+				echo 'Failed to decode JSON response.';
+			}
 		}
 
 		exit();

@@ -166,6 +166,7 @@ class Recharge_Api {
 		$this->loader->add_action( 'admin_post_save_sms_gateway_settings', $plugin_admin, 'save_sms_gateway_settings' );
 		$this->loader->add_action( 'wp_ajax_manual_recharge_request', $plugin_admin, 'manual_recharge_request' );
 		$this->loader->add_action( 'wp_ajax_check_solde', $plugin_admin, 'check_solde' );
+		$this->loader->add_action( 'wp_ajax_test_devices', $plugin_admin, 'test_devices' );
 
 	}
 

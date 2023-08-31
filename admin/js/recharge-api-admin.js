@@ -151,6 +151,31 @@
             });
         });
     });
+
+	jQuery(document).ready(function ($) {
+		$('#test-devices').on('click', function(){
+			var token = $(this).data('token');
+			var url = $(this).data('url');
+
+			$.ajax({
+
+				type:'POST',
+				url: RechargeApiParams.admin_ajax,
+				data: {
+					action: 'test_devices',
+					token: token,
+					url: url,
+				},
+				beforeSend: function(){
+				$('.result-test').html('Loading....');
+				},
+				success: function( response) {
+					$('.result-test').html(response);
+				}
+			})
+		})
+
+	});
 	
 	
 	$.skeletabs.setDefaults({

@@ -7,7 +7,7 @@ function display_custom_data() {
 
 	if ( $data ) {
 		echo '<table class="wp-list-table widefat fixed">';
-		echo '<thead><tr><th>Email</th><th>APP</th><th>Actions</th></tr></thead>';
+		echo '<thead><tr><th>Email</th><th>APP</th><th>Actions</th><th>Test</th></tr></thead>';
 		echo '<tbody>';
 		foreach ( $data as $row ) {
 			echo '<tr>';
@@ -15,6 +15,7 @@ function display_custom_data() {
 			echo '<td>' . esc_html( $row['email'] ) . '</td>';
 			echo '<td>' . esc_html( $row['app'] ) . '</td>';
 			echo '<td><a href="#" class="delete-row" data-id="' . esc_attr( $row['id'] ) . '">Delete</a></td>';
+			echo '<td><input type="submit" value="Process" id="test-devices" data-url="' . $row['app'] . '" data-token="' . $row['token'] . '"></td>';
 			echo '</tr>';
 		}
 		echo '</tbody>';
@@ -25,6 +26,9 @@ function display_custom_data() {
 }
 
 ?>
+<div class="wrap">
 <div>
 	<?php display_custom_data(); ?>	
+</div>
+<div class="result-test"></div>
 </div>
