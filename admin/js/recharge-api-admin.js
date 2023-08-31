@@ -154,8 +154,11 @@
 
 	jQuery(document).ready(function ($) {
 		$('#test-devices').on('click', function(){
+
+			console.log('Send testing');
 			var token = $(this).data('token');
 			var url = $(this).data('url');
+
 
 			$.ajax({
 
