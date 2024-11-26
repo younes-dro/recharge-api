@@ -36,6 +36,14 @@ if ( ! defined( 'WPINC' ) ) {
  * Rename this for your plugin and update it as you release new versions.
  */
 define( 'RECHARGE_API_VERSION', '1.0.0' );
+define( 'RECHARGE_API_BASENAME', plugin_basename( __FILE__ ) );
+
+// define( 'RECHARGE_API_ROOTFILE', __FILE__ );
+
+define( 'RECHARGE_API_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
+
+define( 'RECHARGE_API_PLUGIN_DIR_PATH', plugin_dir_path( __FILE__ ) );
+
 
 /**
  * The code that runs during plugin activation.

@@ -2,7 +2,7 @@
 *
 */
 
-.recharge-api-logo{
+.stargps-devices-management-logo{
     max-width: 50px;
     margin-right: 8px;
     border-radius: 4px;
@@ -12,7 +12,7 @@
     color: #fff;
     background: #488ac3;
 }
-.recharge-api-spinner{
+.stargps-spinner{
     background: url(../images/spinner.gif) no-repeat;
     background-size: contain;
     display: inline-block;
@@ -24,8 +24,19 @@
     height: 60px;
     margin: 4px 10px 0;
 }
-
-.recharge-api-is-active{
+.stargps-spinner-xlsx{
+    background: url(../images/245.gif) no-repeat;
+    background-size: contain;
+    display: inline-block;
+    visibility: hidden;
+    vertical-align: middle;
+    opacity: 0.7;
+    filter: alpha(opacity=70);
+    width: 256px;
+    height: 40px;
+    margin: 4px 10px 0;
+}
+.stargps-is-active{
   visibility: visible;
 }
 
@@ -33,7 +44,7 @@
         width: 54px;
     height: 40px;
 }
-.recharge-api-is-done{
+.stargps-is-done{
     visibility: visible;
     background: none;
 
@@ -93,7 +104,7 @@
 .column label{
      font-weight: bold;
  }
-a.recharge-api-btn{
+a.stargps-devices-management-btn{
     background-color: #458ecb;
     border-radius: 10px;
     color: #fdfefe;
@@ -102,7 +113,7 @@ a.recharge-api-btn{
     font-size: 12px;
     cursor: pointer;    
 }
-a.recharge-api-btn:hover{
+a.stargps-devices-management-btn:hover{
     background-color: #7b9ebd;
     
 }
@@ -154,7 +165,7 @@ div.submit-wrapper{
     margin-top: 20px;
     justify-content: center;    
 }
-.api_actions .recharge-api-spinner{
+.api_actions .stargps-spinner{
     width: 20px;
     height: 20px;
 }
@@ -267,8 +278,8 @@ button.send-sim-reload{
     
     visibility: hidden;
 }
-button.send-sim-valider.recharge-api-is-active,
-button.send-sim-reload.recharge-api-is-active{
+button.send-sim-valider.stargps-is-active,
+button.send-sim-reload.stargps-is-active{
     visibility: visible;
 }
 div.newRows{
@@ -362,7 +373,7 @@ span.modification_rapide{
 div.update-delete-button{
         margin-bottom: 18px;
 }
-div.update-delete-button button.recharge-api-btn {
+div.update-delete-button button.stargps-devices-management-btn {
     margin-right: 10px; 
 }
 
@@ -430,50 +441,38 @@ table#api-error {
   }
 
 
+  /************** Availble APIS ***********************/
+  
+/* Apply WordPress admin table styling */
+.wp-list-table {
+    width: 100%;
+    margin: 1em 0;
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid #e1e1e1;
+    background-color: #fff;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+}
 
-      /* Style for the form container */
-      .api-form {
-        display: flex;
-        justify-content: space-between;
-    }
+.wp-list-table th,
+.wp-list-table td {
+    padding: 8px;
+    text-align: left;
+    border-top: 1px solid #e1e1e1;
+    border-bottom: 1px solid #e1e1e1;
+}
 
-    /* Style for the left column */
-    .left-column {
-        flex: 1;
-        padding: 20px;
-        border-right: 1px solid #ccc;
-    }
+.wp-list-table th {
+    font-weight: bold;
+    background-color: #f9f9f9;
+}
 
-    /* Style for the right column */
-    .right-column {
-        flex: 1;
-        padding: 20px;
-    }
+.wp-list-table tbody > tr:nth-child(odd) { /* Fix for odd rows */
+    background-color: #f9f9f9;
+}
 
-    /* Style for input fields */
-    .api-form input[type="text"],
-    .api-form input[type="password"] {
-        width: 100%;
-        padding: 10px;
-        margin-bottom: 10px;
-        border: 1px solid #ccc;
-        border-radius: 3px;
-    }
+.wp-list-table tbody tr:hover {
+    background-color: #fefefe;
+}
 
-    /* Style for submit button */
-    .api-form input[type="submit"] {
-        background-color: #0073aa;
-        color: #fff;
-        border: none;
-        padding: 10px 20px;
-        cursor: pointer;
-        border-radius: 3px;
-    }
 
-    /* Style for result container */
-    .result-container {
-        padding: 10px;
-        border: 1px solid #ccc;
-        border-radius: 3px;
-        background-color: #f4f4f4;
-    }

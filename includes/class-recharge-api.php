@@ -99,6 +99,10 @@ class Recharge_Api {
 	 */
 	private function load_dependencies() {
 
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/functions.php';
+
+		require plugin_dir_path( dirname( __FILE__ ) ) . 'includes/sms-integration.php';
+
 		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
@@ -156,6 +160,13 @@ class Recharge_Api {
 
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
+		$this->loader->add_action( 'admin_menu', $plugin_admin, 'recharge_api_add_settings_menu' );
+		$this->loader->add_action( 'wp_ajax_recharge-api-add-new', $plugin_admin, 'add_new_api' );
+		$this->loader->add_action( 'wp_ajax_delete_user_api_row', $plugin_admin, 'delete_user_api_row' );
+		$this->loader->add_action( 'admin_post_save_sms_gateway_settings', $plugin_admin, 'save_sms_gateway_settings' );
+		$this->loader->add_action( 'wp_ajax_manual_recharge_request', $plugin_admin, 'manual_recharge_request' );
+		$this->loader->add_action( 'wp_ajax_check_solde', $plugin_admin, 'check_solde' );
+		$this->loader->add_action( 'wp_ajax_test_devices', $plugin_admin, 'test_devices' );
 
 	}
 
